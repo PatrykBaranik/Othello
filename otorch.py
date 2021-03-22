@@ -1,5 +1,5 @@
 import numpy as np
-from utils import plotLearning
+#from utils import plotLearning
 from game import game
 
 def play(n, directory, n_games, net1, net2, save1, save2):
@@ -41,12 +41,12 @@ def play(n, directory, n_games, net1, net2, save1, save2):
             if save2:
                 net2.save_models()
 
-        if i % 200 == 0 and i > 0:
+#        if i % 200 == 0 and i > 0:
 
-            x = [z + 1 for z in range(i)]
-            plotLearning(x, scores1, eps_history1, filename1)
-            plotLearning(x, scores2, eps_history2, filename2)
-            plotLearning(x, sums, losts, filename3)
+#            x = [z + 1 for z in range(i)]
+#            plotLearning(x, scores1, eps_history1, filename1)
+#            plotLearning(x, scores2, eps_history2, filename2)
+#            plotLearning(x, sums, losts, filename3)
 
 
 
@@ -118,9 +118,9 @@ def play(n, directory, n_games, net1, net2, save1, save2):
         log2.write(str(i) + ', ' + str(score2) + '\n')
 
     x = [i + 1 for i in range(n_games)]
-    plotLearning(x, scores1, eps_history1, filename1)
-    plotLearning(x, scores2, eps_history2, filename2)
-    plotLearning(x, sums, losts, filename2)
+#    plotLearning(x, scores1, eps_history1, filename1)
+#    plotLearning(x, scores2, eps_history2, filename2)
+#    plotLearning(x, sums, losts, filename2)
     if save1:
         net1.save_models()
     if save2:
@@ -152,7 +152,7 @@ def learn(n, directory, n_games, net, save):
         if i % 200 == 0 and i > 0:
 
             x = [z + 1 for z in range(i)]
-            plotLearning(x, scores1, eps_history1, filename1)
+#            plotLearning(x, scores1, eps_history1, filename1)
 
 
         else:
@@ -180,7 +180,7 @@ def learn(n, directory, n_games, net, save):
                 done = env.isend()
                 score1 += reward + 1 + 1000 * done
                 net.store_transition(observation, action,
-                                        reward, np.array([observation_, np.zeros((n, n))])  # .reshape(2*n*n)
+                                        reward, np.array([observation_, np.zeros((n, n))])
                                         , int(done))
                 observation = observation_
             # net.learn()
@@ -193,6 +193,6 @@ def learn(n, directory, n_games, net, save):
         env.reset()
 
     x = [i + 1 for i in range(n_games)]
-    plotLearning(x, scores1, eps_history1, filename1)
+#    plotLearning(x, scores1, eps_history1, filename1)
     if save:
         net.save_models()
