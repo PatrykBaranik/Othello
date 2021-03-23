@@ -81,7 +81,7 @@ def play(n, directory, directory1, directory2, n_games, net1, net2, save1, save2
                     done = env.isend()
                     score1 += reward + 1 + 1000 * done
                     net1.store_transition(observation, action,
-                                            reward, np.array([observation_, np.zeros((n, n))])  # .reshape(2*n*n)
+                                            reward, np.array([observation_, np.zeros((n, n))])
                                             , int(done))
                     observation = observation_
                 # net1.learn()
@@ -146,7 +146,7 @@ def learn(n, directory, n_games, net, save, minsc):
         if i % 100 == 0 and i > 0:
             avg_score1 = np.mean(scores1[max(0, i - 10):(i + 1)])
             log1.close()
-            log1 = open(directory + 'log.csv', 'a')
+            log1 = open(directory + '/log.csv', 'a')
 
             print('episode: ', i, 'net1 score: ', score1,
                   ' average score %.3f' % avg_score1,
@@ -186,7 +186,7 @@ def learn(n, directory, n_games, net, save, minsc):
                 done = env.isend()
                 score1 += reward + 1 + 1000 * done
                 net.store_transition(observation, action,
-                                        reward, np.array([observation_, np.zeros((n, n))])  # .reshape(2*n*n)
+                                        reward, np.array([observation_, np.zeros((n, n))])
                                         , int(done))
                 observation = observation_
             # net.learn()
