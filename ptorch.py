@@ -199,3 +199,4 @@ class Agent(object):
 
     def show_models(self):
         print(self.q_eval.show_structure())
+
