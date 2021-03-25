@@ -198,5 +198,5 @@ class Agent(object):
         self.q_next.load_checkpoint()
 
     def show_models(self):
-        print(self.q_eval.show_structure())
-
+        self.q_eval.show_structure()
+        self.q_next.show_structure()
