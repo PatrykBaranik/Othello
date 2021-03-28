@@ -177,12 +177,14 @@ def learn(n, directory, n_games, net, save, minsc):
                 observation = observation_
             # net.learn()
 
-        if save and score1 >= best_score:
+        if save and score1 >= best_score and score1>0:
             best_score = score1
             avg_reset = 0
             net.save_models()
         else:
-            avg_reset += 1
+            if best_score>0:
+                avg_reset += 1
+
 
         if avg_reset == 200:
             net.load_models()
