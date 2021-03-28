@@ -144,42 +144,11 @@ def learn(n, directory, n_games, net, save, minsc):
     log1 = open(directory + '/log.csv', 'a')
     now = datetime.now()
     log1.write(str(now))
-    avg_score1 = 0
-    avg_score0 = 0
+    best_score = 0
     avg_reset = 0
 
     for i in range(n_games):
         done = False
-        if i % 10 == 0 and i > 0:
-            avg_prev = avg_score1
-            avg_score1 = np.mean(scores1[max(0, i - 10):(i + 1)])
-            log1.close()
-            log1 = open(directory + '/log.csv', 'a')
-            if save and avg_score1>avg_score0:
-                avg_score0 = avg_score1
-                avg_reset = 0
-                net.save_models()
-            else:
-                if avg_score1<avg_prev:
-                    avg_reset += 1
-            print('episode: ', i, 'net1 score: ', score1,
-                  ' average score %.3f' % avg_score1,
-                  'epsilon %.3f' % net.epsilon, ' reset ', 10-avg_reset)
-            if avg_reset == 10:
-                net.load_models()
-                avg_reset = 0
-
-
-        if i % 200 == 0 and i > 0:
-
-            x = [z + 1 for z in range(i)]
-            plotLearning(x, scores1, eps_history1, filename1)
-            #print(net.show_models())
-            if np.mean(scores1[-200:]) > minsc:
-                break
-
-        else:
-            print('episode: ', i, 'score1: ', score1)
 
         observation = env.show()
         score1 = 0
@@ -203,10 +172,42 @@ def learn(n, directory, n_games, net, save, minsc):
                 done = env.isend()
                 score1 += reward + 1 + 1000 * done
                 net.store_transition(observation, action,
-                                        reward, np.array([observation_, np.zeros((n, n))])  # .reshape(2*n*n)
+                                        reward, np.array([observation_, np.zeros((n, n))])
                                         , int(done))
                 observation = observation_
             # net.learn()
+
+        if save and score1 >= best_score:
+            best_score = score1
+            avg_reset = 0
+            net.save_models()
+        else:
+            avg_reset += 1
+
+        if avg_reset == 200:
+            net.load_models()
+            avg_reset = 0
+
+
+        if i % 10 == 0 and i > 0:
+            avg_score1 = np.mean(scores1[max(0, i - 10):(i + 1)])
+            log1.close()
+            log1 = open(directory + '/log.csv', 'a')
+            print('episode: ', i, 'net1 score: ', score1,
+                  ' average score %.3f' % avg_score1,
+                  'epsilon %.3f' % net.epsilon)
+
+
+        if i % 200 == 0 and i > 0:
+
+            x = [z + 1 for z in range(i)]
+            plotLearning(x, scores1, eps_history1, filename1)
+            #print(net.show_models())
+            if np.mean(scores1[-200:]) > minsc:
+                break
+
+        else:
+            print('episode: ', i, 'score1: ', score1, 'last action: ',action)
 
 
 
@@ -224,3 +225,4 @@ def learn(n, directory, n_games, net, save, minsc):
     now = datetime.now()
     log1.write(str(now))
     log1.close()
+    

@@ -15,9 +15,11 @@ n = 8
 if os.path.isfile(directory+'/parameters.txt'):
     parameters1 = literal_eval(open(directory + '/parameters.txt', "r").read())
     agent1 = ptorch.Agent(*parameters1)
-    agent1.load_models()
+    if os.path.isfile(directory + '/q_next_dqn') and os.path.isfile(directory+'/q_eval_dqn.txt'):
+        agent1.load_models()
+    agent1.save_models()
 else:
-    parameters1 = [0.0005, 0.99, n * n + 1, 0.01, 1000, [2, n, n], 0.01, 1e-3, 100, 10000000, directory, [n, *literal_eval(net)]]
+    parameters1 = [0.0005, 0.99, n * n + 1, 0.01, 1000, [2, n, n], 0.01, 1e-3, 200, 10000, directory, [n, *literal_eval(net)]]
     agent1 = ptorch.Agent(*parameters1)
     p1 = open(directory + '/parameters.txt', "w")
     p1.write(str(parameters1))
