@@ -161,6 +161,14 @@ def learn(n, directory, n_games, net, save, minsc):
             if pos[action] == -100:
                 net.store_transition(observation, action,
                                         -100, observation, 1)
+
+                if save and score1 > best_score and score1 > 0:
+                    best_score = score1
+                    avg_reset = 0
+                    net.save_models()
+                else:
+                    if best_score > 0 and best_score > score1:
+                        avg_reset += 1
                 net.learn()
                 # score1 -= 100
                 # action = net1.choose_action(observation)
@@ -177,16 +185,8 @@ def learn(n, directory, n_games, net, save, minsc):
                 observation = observation_
             # net.learn()
 
-        if save and score1 >= best_score and score1>0:
-            best_score = score1
-            avg_reset = 0
-            net.save_models()
-        else:
-            if best_score>0:
-                avg_reset += 1
 
-
-        if avg_reset == 5:
+        if avg_reset == 50:
             net.load_models()
             avg_reset = 0
 
@@ -227,4 +227,3 @@ def learn(n, directory, n_games, net, save, minsc):
     now = datetime.now()
     log1.write(str(now))
     log1.close()
-    
