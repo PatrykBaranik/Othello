@@ -140,7 +140,16 @@ class Agent(object):
             _, advantage = self.q_eval.forward(state)
             action = T.argmax(advantage).item()
         else:
-            action = np.random.choice(self.action_space)
+            s = np.size(observation[1,:,:])
+            #action = np.random.choice(self.action_space)
+            pred = np.reshape(observation[1,:,:],(s))
+            bests = []
+            for i in range(s):
+                if pred[i]>-100:
+                    bests += [i]
+            if len(bests) == 0:
+                bests += [len(pred)]
+            action = np.random.choice(bests)
 
         return action
 

@@ -19,11 +19,11 @@ if os.path.isfile(directory+'/parameters.txt'):
         agent1.load_models()
     agent1.save_models()
 else:
-    parameters1 = [0.05, 0.99, n * n + 1, 0.01, 1000, [2, n, n], 0.01, 1e-3, 200, 10000, directory, [n, *literal_eval(net)]]
+    parameters1 = [0.05, 0.99, n * n + 1, 1, 1000, [2, n, n], 0.01, 1e-3, 20000, 10000, directory, [n, *literal_eval(net)]]
     agent1 = ptorch.Agent(*parameters1)
     p1 = open(directory + '/parameters.txt', "w")
     p1.write(str(parameters1))
     p1.close()
     agent1.save_models()
 
-a = otorch.learn(n=n, directory=directory, n_games=int(n_games), net=agent1, save=bool(int(save)), minsc=int(minsc))
+a = otorch.learn(n=n, directory=directory, n_games=int(n_games), net=agent1, save=bool(int(save)), minsc=int(minsc), batch=parameters1[4])

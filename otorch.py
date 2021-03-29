@@ -135,7 +135,7 @@ def play(n, directory, directory1, directory2, n_games, net1, net2, save1, save2
     log2.close()
 
 
-def learn(n, directory, n_games, net, save, minsc):
+def learn(n, directory, n_games, net, save, minsc, batch):
     env = game(n)
     scores1 = []
     eps_history1 = []
@@ -183,7 +183,7 @@ def learn(n, directory, n_games, net, save, minsc):
                                         reward, np.array([observation_, np.zeros((n, n))])
                                         , int(done))
                 observation = observation_
-            # net.learn()
+            net.learn()
 
 
         if avg_reset == 50:
@@ -200,7 +200,7 @@ def learn(n, directory, n_games, net, save, minsc):
                   'epsilon %.3f' % net.epsilon)
 
 
-        if i % 200 == 0 and i > 0:
+        if i % 200 == 0 and i > batch:
 
             x = [z + 1 for z in range(i)]
             plotLearning(x, scores1, eps_history1, filename1)
