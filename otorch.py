@@ -186,7 +186,7 @@ def learn(n, directory, n_games, net, save, minsc, batch):
             net.learn()
 
 
-        if avg_reset == 50:
+        if avg_reset == 50 and i > batch:
             net.load_models()
             avg_reset = 0
 
