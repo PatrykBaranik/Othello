@@ -162,7 +162,7 @@ def learn(n, directory, n_games, net, save, minsc, batch):
                 net.store_transition(observation, action,
                                         -100, observation, 1)
 
-                if save and score1 > best_score and score1 > 0:
+                if save and score1 > best_score and score1 > 0 and i>batch:
                     best_score = score1
                     avg_reset = 0
                     net.save_models()
@@ -227,3 +227,4 @@ def learn(n, directory, n_games, net, save, minsc, batch):
     now = datetime.now()
     log1.write(str(now))
     log1.close()
+
