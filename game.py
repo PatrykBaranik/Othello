@@ -163,7 +163,7 @@ class game(object):
 
     def posMoves(self):
         pos = []
-        for i in range(self.size*self.size):
+        for i in range(self.size**2):
             pos.append(max(move(int(i%self.size), int(i/self.size), self.board.copy()*self.player, self.size).flatten()))
         if (max(pos)==-100):
             pos.append(1)

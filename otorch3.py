@@ -80,8 +80,9 @@ def play(n, directory, directory1, directory2, n_games, net1, net2, save1, save2
                     observation_ = env.show()
                     done = env.isend()
                     score1 += reward + 1 + 1000 * done
-                    net1.store_transition(observation, action, reward,
-                                          np.array([observation_, np.zeros((n, n))]), int(done))
+                    net1.store_transition(observation, action,
+                                            reward, np.array([observation_, np.zeros((n, n))])  # .reshape(2*n*n)
+                                            , int(done))
                     observation = observation_
                 # net1.learn()
 
@@ -134,7 +135,7 @@ def play(n, directory, directory1, directory2, n_games, net1, net2, save1, save2
     log2.close()
 
 
-def learn(n, directory, n_games, net, save, minsc):
+def learn(n, directory, n_games, net, save, minsc, batch):
     env = game(n)
     scores1 = []
     eps_history1 = []
@@ -143,74 +144,57 @@ def learn(n, directory, n_games, net, save, minsc):
     log1 = open(directory + '/log.csv', 'a')
     now = datetime.now()
     log1.write(str(now))
-    best_score = 0
+    best_score = -10000
     avg_reset = 0
-    # net.epsilon=1
-    # for i in range(2):
-    #     done = False
-    #     observation = env.show()
-    #
-    #     while not done:
-    #         pos = env.posMoves()
-    #         observation = np.stack([observation, np.array(pos[:-1]).reshape(n, n)])
-    #         action = net.choose_action(observation)
-    #         reward = env.ai(action)
-    #         observation_ = env.show()
-    #         done = env.isend()
-    #         score1 += reward + 1 + 1000 * done
-    #         net.store_transition(observation, action,
-    #                              reward
-    #                              , int(done))
-    #         observation = observation_
-    #     env.reset()
-    # net.batch_size=2
-    net.epsilon = 0
+    fin = batch
+
     for i in range(n_games):
         done = False
 
         observation = env.show()
         score1 = 0
+
         while not done:
             pos = env.posMoves()
             observation = np.stack([observation, np.array(pos[:-1]).reshape(n, n)])
 
 
             action = net.choose_action(observation)
-            if pos[action] == -100:
+            while pos[action] == -100:
                 net.store_transition(observation, action,
-                                        -100, 1)
-                net.learn()
+                                        -100, observation, 1)
 
-                if save and score1 >= best_score and score1 > 0 and net.epsilon==0.0:
+
+                net.learn()
+                score1 -= 100
+                action = net.choose_action(observation)
+                # lost = 1
+                #done = 1
+
+            reward = env.ai(action)
+            observation_ = env.show()
+            done = env.isend()
+            score1 += reward + 1 + 1000 * done
+            net.store_transition(observation, action,
+                                    reward, np.array([observation_, np.zeros((n, n))])
+                                    , int(done))
+            observation = observation_
+            if done:
+                if save and score1 >= best_score and net.epsilon<=0.02:
                     best_score = score1
                     avg_reset = 0
                     net.save_models()
                 else:
-                    if best_score > score1:
+                    if best_score > 0 and best_score > score1:
                         avg_reset += 1
-                # score1 -= 100
-                # action = net1.choose_action(observation)
-                lost = 1
-                done = 1
-            else:
-                reward = env.ai(action)
-                observation_ = env.show()
-                done = env.isend()
-                score1 += reward + 1 + 1000 * done
-                net.store_transition(observation, action,
-                                        reward
-                                        , int(done))
-                observation = observation_
-            # if done:
-            #     net.learn()
+                net.learn()
 
 
-        if avg_reset == 200:
+        if avg_reset == 200 and i > batch:
             net.load_models()
-            # net.epsilon += 0.99
-            # net.set_optimizer(-0.005)
-            # net.set_batch(np.random.randint(1,10000))
+            net.epsilon += 0.99
             avg_reset = 0
+            fin = i + 50
 
 
         if i % 10 == 0 and i > 0:
@@ -223,13 +207,13 @@ def learn(n, directory, n_games, net, save, minsc):
                   ' epsilon %.3f' % net.epsilon)
 
 
-        if i % 1 == 0:
+        if i % 200 == 0:
 
             x = [z + 1 for z in range(i)]
             plotLearning(x, scores1, eps_history1, filename1)
             #print(net.show_models())
 
-        if np.size(scores1)>50 and np.max(eps_history1[-50:])==0 and np.mean(scores1[-50:]) > minsc:
+        if np.max(eps_history1[-50,:])==0 and np.mean(scores1[-50,:]) > minsc:
                 break
 
         else:
