@@ -6,6 +6,8 @@ n = 8
 l = len(sys.argv)
 if l == 4:
     _, directory, n_games, minsc = sys.argv
+if l == 3:
+    _, directory, layers = sys.argv
 if l == 2:
     _, directory = sys.argv
     n_games = 100000
@@ -18,6 +20,8 @@ if os.path.isfile(directory+'/parameters.txt'):
     agent1 = ptorch3.Agent(*parameters1)
     if os.path.isfile(directory+'/q_eval_dqn'):
         agent1.load_models()
+else:
+    agent1 = ptorch3.Agent(directory, layers)
 agent1.set_optimizer(0.999)
 a = otorch.learn(n=n, directory=directory, n_games=int(n_games), net=agent1, save=True, minsc=10)
 agent1.set_optimizer(0.5)
@@ -32,5 +36,4 @@ agent1.set_optimizer(0.005)
 a = otorch.learn(n=n, directory=directory, n_games=int(n_games), net=agent1, save=True, minsc=60)
 agent1.set_optimizer(0.0005)
 a = otorch.learn(n=n, directory=directory, n_games=int(n_games), net=agent1, save=True, minsc=800)
-
 
