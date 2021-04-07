@@ -183,11 +183,11 @@ def learn(n, directory, n_games, net, save, minsc):
 
                 if save and score1 >= best_score and score1 > 0 and net.epsilon==0.0:
                     best_score = score1
-                    avg_reset = 0
+                    # avg_reset = 0
                     net.save_models()
-                else:
-                    if best_score > score1:
-                        avg_reset += 1
+                # else:
+                #     if best_score > score1:
+                #         avg_reset += 1
                 # score1 -= 100
                 # action = net1.choose_action(observation)
                 lost = 1
@@ -203,12 +203,12 @@ def learn(n, directory, n_games, net, save, minsc):
             #     net.learn()
 
 
-        if avg_reset == 200:
-            net.load_models()
+        # if avg_reset == 200:
+            # net.load_models()
             # net.epsilon += 0.99
             # net.set_optimizer(-0.005)
             # net.set_batch(np.random.randint(1,10000))
-            avg_reset = 0
+            # avg_reset = 0
 
 
         if i % 10 == 0 and i > 0:
@@ -249,3 +249,4 @@ def learn(n, directory, n_games, net, save, minsc):
     now = datetime.now()
     log1.write(str(now))
     log1.close()
+
