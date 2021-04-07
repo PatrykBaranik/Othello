@@ -1,6 +1,6 @@
 import numpy as np
 from utils import plotLearning
-from game import game
+from final.game import game
 from datetime import datetime
 
 def play(n, directory, directory1, directory2, n_games, net1, net2, save1, save2):
@@ -194,13 +194,11 @@ def learn(n, directory, n_games, net, save, minsc):
                 done = 1
             else:
                 reward = env.ai(action)
-                observation_ = env.show()
+                observation = env.show()
                 done = env.isend()
                 score1 += reward + 1 + 1000 * done
-                net.store_transition(observation, action,
-                                        reward
-                                        , int(done))
-                observation = observation_
+                # net.store_transition(observation, action, reward, int(done))
+                # observation = observation_
             # if done:
             #     net.learn()
 

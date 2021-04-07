@@ -25,8 +25,8 @@ class ReplayBuffer(object):
 
     def sample_buffer(self, batch_size):
         max_mem = min(self.mem_cntr, self.mem_size)
-        batch = list(np.random.choice(max_mem, int(batch_size), replace=False))
-        batch += list(range(self.mem_cntr%self.mem_size-int(batch_size),self.mem_cntr%self.mem_size))
+        #batch = list(np.random.choice(max_mem, int(batch_size), replace=False))
+        batch = list(range(self.mem_cntr%self.mem_size-int(batch_size),self.mem_cntr%self.mem_size))
         states = self.state_memory[batch]
         actions = self.action_memory[batch]
         rewards = self.reward_memory[batch]
@@ -112,7 +112,7 @@ class DeepQNetwork(nn.Module):
         return self.state_dict()
 
 class Agent(object):
-    def __init__(self, chkpt_dir, layers, n=8, alpha=1, epsilon=0, eps_min=0.0, eps_dec=0.0, mem_size=1000, batch_size=1000):
+    def __init__(self, chkpt_dir, layers, n=8, alpha=1, epsilon=0, eps_min=0.0, eps_dec=0.0, mem_size=1000, batch_size=1):
         self.n = n
         self.epsilon = epsilon
         self.eps_min = eps_min

@@ -1,5 +1,4 @@
-import otorch
-import ptorch3
+from final import ptorch3, otorch
 import sys
 import os
 from ast import literal_eval
