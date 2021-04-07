@@ -1,6 +1,6 @@
 import numpy as np
 from utils import plotLearning
-from final.game import game
+from game import game
 from datetime import datetime
 
 def play(n, directory, directory1, directory2, n_games, net1, net2, save1, save2):
