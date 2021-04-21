@@ -1,6 +1,6 @@
 import numpy as np
 from utils import plotLearning
-from final_final.game import game
+from game import game
 from datetime import datetime
 def test_oponent(n,pos):
     bests = []

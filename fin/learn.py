@@ -1,4 +1,4 @@
-from final_final import comunication, bot
+import comunication, bot
 import sys
 import os
 from ast import literal_eval
