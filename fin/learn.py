@@ -25,5 +25,6 @@ if os.path.isfile(directory+'/parameters.txt'):
 else:
     agent1 = bot.Agent(directory, literal_eval(layers))
 agent1.set_optimizer(0.00005)
-agent1.epsilon = (1)
+agent1.epsilon = (0)
 a = comunication.learn(n=n, directory=directory, n_games=int(n_games), net=agent1, save=True, minsc=10)
+

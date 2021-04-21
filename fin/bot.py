@@ -202,10 +202,10 @@ class Agent(object):
             state = T.tensor(np.expand_dims(observation.reshape(1, self.n, self.n), axis=1)).to(self.q_eval.device).float()
             advantage = self.q_eval.forward(state)
             action = T.argmax(advantage).item()
-            po = advantage.detach().numpy()
+            po = advantage.detach().numpy()[0]
             # pos = np.array(pos).add
             value = min(po)
-            for i in self.n**2+1:
+            for i in range(self.n**2+1):
                 if pos[i] >-100 and po[i]>=value:
                     value = po[i]
                     action = i
@@ -254,3 +254,4 @@ class Agent(object):
         print(dict)
     def load_models(self):
         self.q_eval.load_checkpoint()
+
