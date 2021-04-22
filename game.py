@@ -126,6 +126,7 @@ class game(object):
         board[int(d / 2-1), int(d / 2)] = -1
         board[int(d / 2-2), int(d / 2)] = -1
         board[int(d / 2), int(d / 2-1)] = 1
+        self.startBoard = board
         self.board = board
         self.size = d
         self.player = 1
@@ -164,9 +165,9 @@ class game(object):
     def posMoves(self):
         pos = []
         for i in range(self.size**2):
-            pos.append(max(move(int(i%self.size), int(i/self.size), self.board.copy()*self.player, self.size).flatten()))
-        if (max(pos)==-100):
-            pos.append(1)
+            pos.append(max(move(int(i%self.size), int(i/self.size), self.board.copy()*self.player, self.size).flatten())-1)
+        if (max(pos)==-101):
+            pos.append(0)
         else:
             pos.append(-100)
 
@@ -181,15 +182,7 @@ class game(object):
 
     def reset(self):
         self.end = 0
-        d = self.size
-        board = np.zeros((d,d))
-        board[int(d/2),int(d/2)] = -1
-        board[int(d / 2-1), int(d / 2-1)] = -1
-        board[int(d / 2-1), int(d / 2)] = -1
-        board[int(d / 2-2), int(d / 2)] = -1
-        board[int(d / 2), int(d / 2-1)] = 1
-        self.board = board
-        self.size = d
+        self.board = self.startBoard
         self.player = 1
 
     def playerNum(self):
